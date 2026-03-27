@@ -75,7 +75,7 @@ Architecture **Command + Agents + References** (pattern GSD) — pas de skill-or
 │   ├── plan-phases.md     # Niveau 3 : Phases atomiques
 │   ├── plan-status.md
 │   └── plan-abort.md
-├── agents/                # Agents specialises (contexte frais)
+├── agents/gsr/             # Agents specialises (contexte frais)
 │   ├── gsr-synthesizer.md # Phase 6 discovery : synthese + validation
 │   ├── gsr-bootstrapper.md# Bootstrap : CLAUDE.md, SPEC.md, etc.
 │   ├── gsr-analyst.md     # Plan : analyse docs bootstrap

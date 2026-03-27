@@ -67,9 +67,9 @@ phase_discovery_files() {
 .claude/commands/gsr/discover-abort.md
 .claude/commands/gsr/discover-save.md
 .claude/commands/gsr/bootstrap.md
-.claude/agents/research-prompt-agent.md
-.claude/agents/gsr-synthesizer.md
-.claude/agents/gsr-bootstrapper.md
+.claude/agents/gsr/research-prompt-agent.md
+.claude/agents/gsr/gsr-synthesizer.md
+.claude/agents/gsr/gsr-bootstrapper.md
 FILES
 }
 
@@ -86,9 +86,9 @@ phase_plan_files() {
 .claude/commands/gsr/plan-phases.md
 .claude/commands/gsr/plan-status.md
 .claude/commands/gsr/plan-abort.md
-.claude/agents/gsr-analyst.md
-.claude/agents/gsr-planner.md
-.claude/agents/gsr-generator.md
+.claude/agents/gsr/gsr-analyst.md
+.claude/agents/gsr/gsr-planner.md
+.claude/agents/gsr/gsr-generator.md
 .claude/gsr/plan-output.md
 .claude/gsr/plan-research.md
 FILES

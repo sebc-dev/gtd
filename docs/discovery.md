@@ -2067,7 +2067,7 @@ CLAUDE: Merci. D'après la recherche :
 
 - [ ] `.claude/commands/discover.md`
 - [ ] `.claude/agents/discovery-agent.md`
-- [ ] `.claude/agents/research-prompt-agent.md`
+- [ ] `.claude/agents/gsr/research-prompt-agent.md`
 - [ ] `.claude/templates/discovery.md` (7 sections)
 - [ ] `.claude/templates/discovery-session.md` (avec métadonnées validation + bootstrap + research log)
 - [ ] `.claude/templates/spec-md.md`
@@ -2152,7 +2152,7 @@ CLAUDE: Merci. D'après la recherche :
 
 |Fichier|Action|Nature du changement|
 |---|---|---|
-|`.claude/agents/research-prompt-agent.md`|**Créer**|Agent complet (§3.4)|
+|`.claude/agents/gsr/research-prompt-agent.md`|**Créer**|Agent complet (§3.4)|
 |`.claude/commands/discover.md`|**Modifier**|Ajouter logique Research Gate + invocation agent|
 |`.claude/agents/discovery-agent.md`|**Modifier**|Ajouter règles Research Gate dans les phases 2, 3, 5c, et §5.2|
 |`.claude/templates/discovery-session.md`|**Modifier**|Ajouter sections Research Log + Pending Research|
