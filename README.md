@@ -6,8 +6,8 @@ Plugin Claude Code qui structure le cycle de vie d'un projet solo : de l'idee au
 
 | Phase | Status | Description |
 |-------|--------|-------------|
-| Discovery | Done | Interview guidee en 6 phases generant `discovery.md` |
-| Plan | Planned | Epics -> phases executables avec graphe de dependances |
+| Discovery | Done | Interview guidee en 6 phases generant `discovery.md` + bootstrap projet |
+| Plan | Done | Planification progressive : Epics → Stories → Phases atomiques (JIT) |
 | Execute | Planned | TDD, commits atomiques, quality gates |
 | Ship | Planned | Merge, deploy, smoke tests |
 
@@ -38,6 +38,8 @@ GTD_FORCE=1 curl -fsSL ... | bash
 
 ## Utilisation
 
+### Discovery
+
 ```
 /gtd:discover "description du projet"   # Demarrer une discovery
 /gtd:discover-resume                     # Reprendre une session
@@ -46,13 +48,46 @@ GTD_FORCE=1 curl -fsSL ... | bash
 /gtd:bootstrap [path]                    # Generer la structure projet
 ```
 
-## Structure installee
+### Plan (progressif)
+
+```
+/gtd:plan [SPEC.md] [--granularity=flexible]   # Niveau 1 : ROADMAP (Epics + Stories)
+/gtd:plan-story [epic/story]                    # Niveau 2 : Detailler une story
+/gtd:plan-phases [epic/story]                   # Niveau 3 : Phases atomiques
+/gtd:plan-status                                # Voir la progression
+/gtd:plan-abort                                 # Annuler la session
+```
+
+## Architecture
+
+Architecture **Command + Agents + References** (pattern GSD) — pas de skill-orchestrateur.
 
 ```
 .claude/
-├── skills/gtd-discovery/    # Skill + references (phases, templates, recherche)
-├── commands/gtd/            # 5 slash commands
-└── agents/                  # research-prompt-agent
+├── commands/gtd/          # Slash commands (orchestrateurs legers)
+│   ├── discover.md        # Interface conversationnelle discovery
+│   ├── discover-resume.md
+│   ├── discover-save.md
+│   ├── discover-abort.md
+│   ├── bootstrap.md       # Thin dispatcher → agent
+│   ├── plan.md            # Niveau 1 : ROADMAP
+│   ├── plan-story.md      # Niveau 2 : Detail story
+│   ├── plan-phases.md     # Niveau 3 : Phases atomiques
+│   ├── plan-status.md
+│   └── plan-abort.md
+├── agents/                # Agents specialises (contexte frais)
+│   ├── gtd-synthesizer.md # Phase 6 discovery : synthese + validation
+│   ├── gtd-bootstrapper.md# Bootstrap : CLAUDE.md, SPEC.md, etc.
+│   ├── gtd-analyst.md     # Plan : analyse docs bootstrap
+│   ├── gtd-planner.md     # Plan : decomposition multi-mode
+│   ├── gtd-generator.md   # Plan : generation fichiers
+│   └── research-prompt-agent.md  # Recherche : prompts optimises
+└── gtd/                   # References partagees (chargees par les agents)
+    ├── discovery-phases.md
+    ├── discovery-output.md
+    ├── discovery-research.md
+    ├── plan-output.md
+    └── plan-research.md
 ```
 
 ## License
