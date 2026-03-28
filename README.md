@@ -8,7 +8,7 @@ Plugin Claude Code qui structure le cycle de vie d'un projet solo : de l'idee au
 |-------|--------|-------------|
 | Discovery | Done | Interview guidee en 6 phases generant `discovery.md` + bootstrap projet |
 | Plan | Done | Planification progressive : Epics → Stories → Phases atomiques (JIT) |
-| Execute | Planned | TDD, commits atomiques, quality gates |
+| Execute | Done | Execution autonome, review, quality gates, TDD conditionnel |
 | Ship | Planned | Merge, deploy, smoke tests |
 
 ## Installation
@@ -58,6 +58,21 @@ GSR_FORCE=1 curl -fsSL ... | bash
 /gsr:plan-abort                                 # Annuler la session
 ```
 
+### Execute
+
+```
+/gsr:execute [epic/story]                          # Executer toute une story (phases sequentielles)
+/gsr:execute-phase [epic/story/phase]              # Executer une phase isolee
+/gsr:execute [epic/story] --resume                 # Reprendre une execution interrompue
+```
+
+### Configuration
+
+```
+/gsr:settings                                      # Voir/modifier la configuration
+/gsr:set-profile [quality|balanced|budget]         # Changer le profil de modeles
+```
+
 ### Version et mise a jour
 
 ```
@@ -99,22 +114,36 @@ Architecture **Command + Agents + References** (pattern GSD) — pas de skill-or
 │   ├── plan-phases.md     # Niveau 3 : Phases atomiques
 │   ├── plan-status.md
 │   ├── plan-abort.md
-│   ├── version.md        # Version installee + check update
-│   └── update.md         # Mise a jour depuis GitHub
+│   ├── execute.md         # Orchestration story (phases sequentielles)
+│   ├── execute-phase.md   # Orchestration phase unitaire
+│   ├── settings.md        # Configuration GSR
+│   ├── set-profile.md     # Changement profil modeles
+│   ├── version.md         # Version installee + check update
+│   └── update.md          # Mise a jour depuis GitHub
 ├── agents/gsr/             # Agents specialises (contexte frais)
 │   ├── gsr-synthesizer.md # Phase 6 discovery : synthese + validation
 │   ├── gsr-bootstrapper.md# Bootstrap : CLAUDE.md, SPEC.md, etc.
 │   ├── gsr-analyst.md     # Plan : analyse docs bootstrap
 │   ├── gsr-planner.md     # Plan : decomposition multi-mode
 │   ├── gsr-generator.md   # Plan : generation fichiers
+│   ├── gsr-executor.md   # Execute : implementation des plans
+│   ├── gsr-reviewer.md   # Execute : review diff + findings
+│   ├── gsr-debugger.md   # Execute : diagnostic post-echec
 │   └── research-prompt-agent.md  # Recherche : prompts optimises
 └── gsr/                   # References + metadata
     ├── VERSION              # Version installee (semver)
+    ├── config-defaults.json # Configuration par defaut
     ├── discovery-phases.md
     ├── discovery-output.md
     ├── discovery-research.md
     ├── plan-output.md
-    └── plan-research.md
+    ├── plan-research.md
+    ├── execute-deviation.md # Regles de deviation
+    ├── execute-quality.md   # Quality gates
+    ├── execute-review.md    # Criteres review + findings
+    ├── execute-output.md    # Templates SUMMARY.md
+    ├── execute-session.md   # Session file (reprise)
+    └── status-output.md     # Templates GSR-STATUS.md
 ```
 
 ## License
