@@ -58,6 +58,13 @@ GSR_FORCE=1 curl -fsSL ... | bash
 /gsr:plan-abort                                 # Annuler la session
 ```
 
+### Version et mise a jour
+
+```
+/gsr:version                                    # Version installee + check update
+/gsr:update [--dry-run] [--force]               # Mettre a jour depuis GitHub
+```
+
 ## Architecture
 
 Architecture **Command + Agents + References** (pattern GSD) — pas de skill-orchestrateur.
@@ -74,7 +81,9 @@ Architecture **Command + Agents + References** (pattern GSD) — pas de skill-or
 │   ├── plan-story.md      # Niveau 2 : Detail story
 │   ├── plan-phases.md     # Niveau 3 : Phases atomiques
 │   ├── plan-status.md
-│   └── plan-abort.md
+│   ├── plan-abort.md
+│   ├── version.md        # Version installee + check update
+│   └── update.md         # Mise a jour depuis GitHub
 ├── agents/gsr/             # Agents specialises (contexte frais)
 │   ├── gsr-synthesizer.md # Phase 6 discovery : synthese + validation
 │   ├── gsr-bootstrapper.md# Bootstrap : CLAUDE.md, SPEC.md, etc.
@@ -82,7 +91,8 @@ Architecture **Command + Agents + References** (pattern GSD) — pas de skill-or
 │   ├── gsr-planner.md     # Plan : decomposition multi-mode
 │   ├── gsr-generator.md   # Plan : generation fichiers
 │   └── research-prompt-agent.md  # Recherche : prompts optimises
-└── gsr/                   # References partagees (chargees par les agents)
+└── gsr/                   # References + metadata
+    ├── VERSION              # Version installee (semver)
     ├── discovery-phases.md
     ├── discovery-output.md
     ├── discovery-research.md

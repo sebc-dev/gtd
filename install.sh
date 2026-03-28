@@ -204,6 +204,21 @@ cmd_install() {
   [[ $skipped -gt 0 ]]   && echo -e "  ${C_YELLOW}${skipped} skipped${C_RESET}"
   [[ $failed -gt 0 ]]    && echo -e "  ${C_RED}${failed} failed${C_RESET}"
 
+  # Install VERSION file
+  if [[ "$DRY_RUN" != "1" && $failed -eq 0 ]]; then
+    local version_url="${BASE_URL}/VERSION"
+    local version_dest="${TARGET}/.claude/gsr/VERSION"
+    mkdir -p "$(dirname "$version_dest")"
+    if curl -fsSL -o "$version_dest" "$version_url" 2>/dev/null; then
+      ok ".claude/gsr/VERSION (v$(cat "$version_dest" | tr -d '\n'))"
+      installed=$((installed + 1))
+    else
+      warn "Could not download VERSION file"
+    fi
+  elif [[ "$DRY_RUN" == "1" ]]; then
+    echo -e "  ${C_GREEN}+${C_RESET} .claude/gsr/VERSION"
+  fi
+
   if [[ "$DRY_RUN" != "1" && $failed -eq 0 ]]; then
     echo -e "\n${C_GREEN}Done.${C_RESET} Commands available:"
     for phase in $phases; do
