@@ -147,6 +147,14 @@ Prochaine étape :
   Ou planifier une autre story : /gsr:plan-story [epic]/[autre-story]
 ```
 
+## Mise a jour du suivi
+
+Mettre a jour `docs/GSR-STATUS.md` selon `.claude/gsr/status-output.md` section `<update-plan>` :
+- Plan : incrementer Phases generees, Niveau → `3-phases`
+- Detail par Epic : incrementer Phases pour l'epic, recalculer Statut (selon `<update-plan-epic-statut>`)
+- Si toutes stories de tous epics ont des phases → Pipeline Plan → `OK`
+- Historique : "Phases generees pour [epic]/[story] ([N] phases)"
+
 ## Garde-fous
 
 | Limite | Valeur | Comportement |

@@ -41,6 +41,7 @@ GSR est un plugin Claude Code qui structure le cycle de vie d'un projet solo dev
 |-------|--------|----------|--------|------------|
 | Discovery | Done | 5 | 3 | 3 |
 | Plan | Done | 5 | 3 (+1 partage) | 2 |
+| Suivi | Done | 1 (status) | — | 1 (status-output) |
 | Execute | Planned | — | — | — |
 | Ship | Planned | — | — | — |
 
@@ -50,7 +51,7 @@ GSR est un plugin Claude Code qui structure le cycle de vie d'un projet solo dev
 
 ```
 .claude/
-├── commands/gsr/                    # Slash commands (10 total)
+├── commands/gsr/                    # Slash commands (13 total)
 │   ├── discover.md                  # Interface conversationnelle discovery
 │   ├── discover-resume.md           # Reprendre session interrompue
 │   ├── discover-save.md             # Sauvegarder discovery partiel
@@ -60,7 +61,10 @@ GSR est un plugin Claude Code qui structure le cycle de vie d'un projet solo dev
 │   ├── plan-story.md                # Niveau 2 : Detail story
 │   ├── plan-phases.md               # Niveau 3 : Phases atomiques
 │   ├── plan-status.md               # Vue progression planification
-│   └── plan-abort.md                # Annuler session planification
+│   ├── plan-abort.md                # Annuler session planification
+│   ├── status.md                    # Vue avancement global du workflow
+│   ├── version.md                   # Version installee
+│   └── update.md                    # Mise a jour depuis GitHub
 │
 ├── agents/                          # Agents specialises (6 total)
 │   ├── research-prompt-agent.md     # Prompts de recherche (discovery + plan)
@@ -70,12 +74,13 @@ GSR est un plugin Claude Code qui structure le cycle de vie d'un projet solo dev
 │   ├── gsr-planner.md               # Plan : decomposition multi-mode
 │   └── gsr-generator.md             # Plan : generation fichiers multi-mode
 │
-└── gsr/                             # References partagees (5 total)
+└── gsr/                             # References partagees (6 total)
     ├── discovery-phases.md          # 6 phases interview (sections XML)
     ├── discovery-output.md          # Templates discovery.md, session, SPEC, etc.
     ├── discovery-research.md        # Research Gates discovery
     ├── plan-output.md               # Templates ROADMAP, EPIC, STORY, PLAN, CONTEXT
-    └── plan-research.md             # Research Gates planification
+    ├── plan-research.md             # Research Gates planification
+    └── status-output.md             # Template + logique mise a jour GSR-STATUS.md
 ```
 
 ---
@@ -566,9 +571,56 @@ Met a jour en cascade : chaque generation met a jour les fichiers parents (STORY
 | `<trigger-types>` | IMPLEMENTATION_PATTERN, LIBRARY_CHOICE, INTEGRATION_RISK, UNKNOWN_RESOLUTION |
 | `<integration-flow>` | Meme mecanisme que discovery adapte au planning |
 
+### 7.6 status-output.md
+
+| Section XML | Contenu |
+|-------------|---------|
+| `<status-template>` | Template complet de `docs/GSR-STATUS.md` (pipeline, discovery, bootstrap, plan, historique) |
+| `<statut-icons>` | Icones de statut (`--`, `En cours`, `OK`, `Partiel`, `Annule`, `N/A`) |
+| `<update-discovery>` | Logique de mise a jour pour les 4 commandes discovery |
+| `<update-bootstrap>` | Logique de mise a jour pour /gsr:bootstrap |
+| `<update-plan>` | Logique de mise a jour pour les 4 commandes plan |
+| `<update-plan-epic-statut>` | Calcul du statut par epic (Stories OK, En cours, etc.) |
+| `<rebuild-logic>` | Regeneration complete depuis l'etat reel du projet |
+
 ---
 
-## 8. Session management
+## 8. Suivi d'avancement — GSR-STATUS.md
+
+### 8.1 Objectif
+
+Fichier persistant `docs/GSR-STATUS.md` qui donne a tout moment l'etat d'avancement du workflow. Mis a jour automatiquement par chaque commande GSR.
+
+### 8.2 Contenu
+
+- **Pipeline** : statut de chaque phase (Discovery → Bootstrap → Plan → Execute → Ship)
+- **Discovery** : phase courante, sections completees, research gates
+- **Bootstrap** : fichiers generes
+- **Plan** : progression par niveau, detail par epic/story/phases
+- **Historique** : log chronologique des actions (commande + detail)
+
+### 8.3 Commandes qui mettent a jour le fichier
+
+| Commande | Action sur le suivi |
+|----------|---------------------|
+| `/gsr:discover` | Cree le fichier, progression phase par phase, `OK` a la fin |
+| `/gsr:discover-resume` | Reprend la progression |
+| `/gsr:discover-save` | Pipeline Discovery → `Partiel` |
+| `/gsr:discover-abort` | Pipeline Discovery → `Annule` |
+| `/gsr:bootstrap` | Pipeline Bootstrap → `OK`, liste fichiers crees |
+| `/gsr:plan` | Pipeline Plan → `En cours`, table epics/stories |
+| `/gsr:plan-story` | Incremente stories detaillees |
+| `/gsr:plan-phases` | Incremente phases generees, `OK` si tout planifie |
+| `/gsr:plan-abort` | Session seule ou tout supprimer |
+| `/gsr:status` | Affiche le fichier, ou le regenere avec `--rebuild` |
+
+### 8.4 Regeneration
+
+Si le fichier est absent ou corrompu, `/gsr:status --rebuild` le reconstruit en scannant les fichiers existants du projet (discovery.md, CLAUDE.md, docs/plan/, etc.).
+
+---
+
+## 9. Session management
 
 Deux fichiers session independants :
 
@@ -581,7 +633,7 @@ Les sessions persistent entre les `/clear` et les interruptions. Elles permetten
 
 ---
 
-## 9. Installation
+## 10. Installation
 
 ```bash
 # Tout installer
@@ -603,7 +655,7 @@ Le script telecharge les fichiers depuis GitHub et les installe dans `.claude/` 
 
 ---
 
-## 10. Prochaines etapes (Execute + Ship)
+## 11. Prochaines etapes (Execute + Ship)
 
 ### Phase Execute (a concevoir)
 
@@ -635,7 +687,7 @@ D'apres `docs/workflow.md`, la phase d'execution devrait couvrir :
 
 ---
 
-## 11. Decisions d'architecture documentees
+## 12. Decisions d'architecture documentees
 
 | Decision | Raison | Alternative rejetee |
 |----------|--------|---------------------|
@@ -646,3 +698,4 @@ D'apres `docs/workflow.md`, la phase d'execution devrait couvrir :
 | References dans .claude/gsr/ | Centralisees, partagees entre phases, coherent | Dossier par phase (dispersion) |
 | gsr-planner en model opus | Decomposition = travail cognitif lourd, meilleur resultat avec opus | Sonnet (suffisant pour generation, pas pour decomposition) |
 | 3 niveaux de granularite au choix | Flexibilite maximale pour l'utilisateur | Granularite fixe (trop rigide) |
+| Suivi persistant (GSR-STATUS.md) mis a jour par chaque commande | Consultable sans Claude Code, historique des actions, regenerable | Scan a la volee (pas d'historique, necessite Claude Code) |

@@ -66,3 +66,12 @@ Prochaines étapes :
 3. git init && git add -A && git commit -m "Initial bootstrap from discovery"
 4. /gsr:plan pour planifier l'implémentation
 ```
+
+## Mise a jour du suivi
+
+Mettre a jour `docs/GSR-STATUS.md` selon `.claude/gsr/status-output.md` section `<update-bootstrap>` :
+- Phase active → `Bootstrap`
+- Pipeline Bootstrap → `OK`
+- Bootstrap : cocher chaque fichier cree (`OK`), marquer `N/A` les non applicables
+- Historique : "Bootstrap termine ([N] fichiers)"
+- Ne pas mettre a jour en mode `--dry-run`

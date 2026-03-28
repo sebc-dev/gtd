@@ -225,6 +225,14 @@ Après la Phase 5, la synthèse est déléguée à un agent spécialisé :
      [C] Accepter les risques et continuer
      ```
 
+## Mise a jour du suivi
+
+A chaque etape cle, mettre a jour `docs/GSR-STATUS.md` selon `.claude/gsr/status-output.md` section `<update-discovery>` :
+
+1. **Au demarrage** : creer le fichier si absent (template `<status-template>`, nom = description projet). Pipeline Discovery → `En cours`. Historique : "Discovery demarree".
+2. **A chaque phase validee** : mettre a jour Phase (`[N]/6`) et Sections.
+3. **Apres synthese reussie** : Pipeline Discovery → `OK`. Historique : "Discovery terminee ([N]/7 sections)".
+
 ## Scope v1 — Limitations
 
 | Supporté | Non supporté (v1) |

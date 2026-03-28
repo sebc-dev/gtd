@@ -177,6 +177,16 @@ Prochaine étape :
   → /gsr:plan-story [slug du premier epic]/[slug de la première story]
 ```
 
+## Mise a jour du suivi
+
+Mettre a jour `docs/GSR-STATUS.md` selon `.claude/gsr/status-output.md` section `<update-plan>` :
+- Phase active → `Plan`
+- Pipeline Plan → `En cours`
+- Plan : Niveau → `1-roadmap`, remplir Epics/Stories counts, Granularite
+- Detail par Epic : generer la table complete
+- Historique : "Roadmap genere ([N] epics, [N] stories)"
+- Ne pas mettre a jour en mode `--dry-run`
+
 ## Garde-fous
 
 | Limite | Valeur | Comportement |

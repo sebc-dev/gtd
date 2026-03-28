@@ -28,3 +28,10 @@ Supprimer cette session ? Aucun discovery.md ne sera généré.
 - **Oui, supprimer** → supprimer `.claude/discovery-session.md` et `.claude/research-prompt.md` (si existe) → "Session supprimée."
 - **Non, reprendre** → basculer vers `/gsr:discover-resume`
 - **Sauvegarder un partiel** → basculer vers `/gsr:discover-save`
+
+## Mise a jour du suivi
+
+Mettre a jour `docs/GSR-STATUS.md` selon `.claude/gsr/status-output.md` section `<update-discovery>` :
+- Pipeline Discovery → `Annule`
+- Discovery : Statut → `Annule`, reinitialiser Phase et Sections
+- Historique : "Session annulee"

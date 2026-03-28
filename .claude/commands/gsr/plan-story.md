@@ -137,3 +137,10 @@ Prochaine étape :
   Détailler une autre story : /gsr:plan-story [epic]/[autre-story]
   Ou générer les phases : /gsr:plan-phases [epic]/[story]
 ```
+
+## Mise a jour du suivi
+
+Mettre a jour `docs/GSR-STATUS.md` selon `.claude/gsr/status-output.md` section `<update-plan>` :
+- Plan : incrementer Stories detaillees, Niveau → `2-story`
+- Detail par Epic : incrementer Detaillees pour l'epic concerne, recalculer Statut
+- Historique : "Story [epic]/[story] detaillee"

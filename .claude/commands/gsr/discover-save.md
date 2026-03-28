@@ -55,3 +55,10 @@ Pour bootstrapper avec ce qu'on a : `/gsr:bootstrap discovery.md --minimal`
 ```
 
 La session `.claude/discovery-session.md` est conservée pour permettre la reprise.
+
+## Mise a jour du suivi
+
+Mettre a jour `docs/GSR-STATUS.md` selon `.claude/gsr/status-output.md` section `<update-discovery>` :
+- Pipeline Discovery → `Partiel`
+- Discovery : Statut → `Partiel`, Fichier → `discovery.md (partiel)`
+- Historique : "Sauvegarde partielle ([N]/6 phases)"

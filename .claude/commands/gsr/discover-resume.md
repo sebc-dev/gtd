@@ -47,6 +47,12 @@ Tu as les résultats ?
 - **Non, skip** → marquer comme "Skipped" dans le Research Log → ajouter aux questions ouvertes → reprendre la phase normalement
 - **Relancer le prompt** → lire `.claude/research-prompt.md` → réafficher le prompt formaté → reproposer les options
 
+## Mise a jour du suivi
+
+Mettre a jour `docs/GSR-STATUS.md` selon `.claude/gsr/status-output.md` section `<update-discovery>` :
+- Historique : "Session reprise (Phase [N]/6)"
+- Progression : meme logique que `/gsr:discover` (phase validee, synthese, etc.)
+
 ## Après reprise
 
 Charger la section XML correspondant à la phase en cours depuis `.claude/gsr/discovery-phases.md`. Reprendre le flow exactement où il s'était arrêté, avec le contexte capturé dans la session.

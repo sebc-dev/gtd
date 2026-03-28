@@ -49,3 +49,10 @@ Que veux-tu supprimer ?
 
 ### Option C — Annuler
 - Message : "Annulation. La session est intacte."
+
+## Mise a jour du suivi
+
+Mettre a jour `docs/GSR-STATUS.md` selon `.claude/gsr/status-output.md` section `<update-plan>` :
+- **Option A** : pas de changement Pipeline, Historique : "Session plan supprimee (fichiers conserves)"
+- **Option B** : Pipeline Plan → `Annule`, reinitialiser section Plan, Historique : "Plan supprime"
+- **Option C** : aucune mise a jour
