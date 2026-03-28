@@ -61,6 +61,8 @@ phase_config_files() {
   cat <<'FILES'
 .claude/gsr/config-defaults.json
 .claude/gsr/bin/gsr-config.sh
+.claude/commands/gsr/settings.md
+.claude/commands/gsr/set-profile.md
 FILES
 }
 
