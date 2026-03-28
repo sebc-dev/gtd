@@ -6,6 +6,26 @@ human_ai_ratio: 70/30
 
 # /gsr:discover "$ARGUMENTS"
 
+## 0. Charger la configuration
+
+1. Déterminer le mode config : exécuter `.claude/gsr/bin/gsr-config.sh config-mode`
+   - Si `jq` → exécuter `.claude/gsr/bin/gsr-config.sh dump discovery` pour obtenir toutes les valeurs en un appel
+   - Si `claude` → lire `.claude/gsr/config.json` avec Read et extraire les valeurs de `workflow.discovery.*`, `workflow.research.*` et `workflow.mode`
+   - Si `.claude/gsr/config.json` n'existe pas → utiliser les valeurs par défaut documentées dans les garde-fous ci-dessous
+
+2. Valeurs chargées (utilisées dans les garde-fous et passées aux agents) :
+
+| Variable | Clé config | Défaut |
+|----------|------------|--------|
+| `$mode` | `workflow.mode` | `interactive` |
+| `$max_questions_per_phase` | `workflow.discovery.max_questions_per_phase` | `5` |
+| `$max_returns_per_phase` | `workflow.discovery.max_returns_per_phase` | `3` |
+| `$max_interview_exchanges` | `workflow.discovery.max_interview_exchanges` | `30` |
+| `$timeout_minutes` | `workflow.discovery.timeout_minutes` | `45` |
+| `$research_enabled` | `workflow.research.enabled` | `true` |
+| `$max_deep_research` | `workflow.research.max_deep` | `3` |
+| `$max_quick_research` | `workflow.research.max_quick` | `5` |
+
 ## Pré-checks
 
 1. Vérifier si un fichier `discovery.md` existe déjà dans le projet :
@@ -73,14 +93,14 @@ Tu es un consultant produit/tech qui guide un développeur solo à travers une i
 
 ## Garde-fous
 
-| Limite | Valeur | Comportement si atteinte |
-|--------|--------|--------------------------|
-| Questions par phase | 5 max | "On tourne en rond. Passons avec ce qu'on a, on pourra affiner." |
-| Retours par phase | 3 max | "3ème retour sur cette phase. Je résume ce qu'on a et on avance." |
-| Cycles validation | 3 max | "Validation bloquée. Génération avec warnings." |
-| Total interview | ~30 échanges | Proposition de sauvegarde partielle |
-| Durée totale | < 45 min | "On approche des 45 min. Je propose de sauvegarder." |
-| Recherches / session | 3 deep + 5 quick max | "On a déjà fait plusieurs recherches. Continuons avec ce qu'on a." |
+| Limite | Valeur (depuis config) | Comportement si atteinte |
+|--------|------------------------|--------------------------|
+| Questions par phase | `$max_questions_per_phase` (défaut: 5) | "On tourne en rond. Passons avec ce qu'on a, on pourra affiner." |
+| Retours par phase | `$max_returns_per_phase` (défaut: 3) | "[N]ème retour sur cette phase. Je résume ce qu'on a et on avance." |
+| Cycles validation | `$max_returns_per_phase` (défaut: 3) | "Validation bloquée. Génération avec warnings." |
+| Total interview | `$max_interview_exchanges` (défaut: 30) | Proposition de sauvegarde partielle |
+| Durée totale | `$timeout_minutes` min (défaut: 45) | "On approche des $timeout_minutes min. Je propose de sauvegarder." |
+| Recherches / session | `$max_deep_research` deep + `$max_quick_research` quick (défaut: 3+5) | "On a déjà fait plusieurs recherches. Continuons avec ce qu'on a." |
 
 ## Gestion "Je ne sais pas"
 
@@ -193,6 +213,12 @@ Après la Phase 5, la synthèse est déléguée à un agent spécialisé :
    ```
    Session : .claude/discovery-session.md
    Répertoire projet : [cwd]
+
+   <config>
+   research_enabled=$research_enabled
+   max_deep_research=$max_deep_research
+   max_quick_research=$max_quick_research
+   </config>
    ```
 
 3. L'agent produit `discovery.md` et retourne un résumé structuré

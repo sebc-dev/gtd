@@ -10,11 +10,32 @@ human_ai_ratio: 40/60
 
 # /gsr:plan-phases $ARGUMENTS
 
+## 0. Charger la configuration
+
+1. Déterminer le mode config : exécuter `.claude/gsr/bin/gsr-config.sh config-mode`
+   - Si `jq` → exécuter `.claude/gsr/bin/gsr-config.sh dump plan` pour obtenir les valeurs
+   - Si `claude` → lire `.claude/gsr/config.json` avec Read et extraire `workflow.plan.*`, `workflow.research.*` et `workflow.granularity`
+   - Si `.claude/gsr/config.json` n'existe pas → utiliser les valeurs par défaut documentées dans les garde-fous ci-dessous
+
+2. Valeurs chargées :
+
+| Variable | Clé config | Défaut |
+|----------|------------|--------|
+| `$granularity` | `workflow.granularity` | `flexible` |
+| `$max_phases_per_story` | `workflow.plan.max_phases_per_story` | `8` |
+| `$max_review_cycles` | `workflow.plan.max_review_cycles` | `3` |
+| `$timeout_minutes` | `workflow.plan.timeout_minutes` | `30` |
+| `$research_enabled` | `workflow.research.enabled` | `true` |
+| `$max_deep_research` | `workflow.research.max_deep` | `3` |
+| `$max_quick_research` | `workflow.research.max_quick` | `5` |
+
+Note : si `--granularity=` est passé en argument, il surcharge `$granularity` de la config.
+
 ## Parse arguments
 
 1. Extraire depuis `$ARGUMENTS` :
    - `path` : format `[epic-slug]/[story-slug]` — ex: `01-auth/01-login`
-   - `--granularity=` : `fine` | `standard` | `flexible` — défaut : utiliser la granularité de la session, ou `flexible`
+   - `--granularity=` : `fine` | `standard` | `flexible` — défaut : `$granularity` (depuis config, ou `flexible`)
    - `--resume` : si présent, reprendre après une Deep Research
 
 ## Pré-checks
@@ -52,8 +73,14 @@ human_ai_ratio: 40/60
    Story : docs/plan/epics/[epic-slug]/stories/[story-slug]/STORY.md
    Epic : docs/plan/epics/[epic-slug]/EPIC.md
    Roadmap : docs/plan/ROADMAP.md
-   Granularité : [granularity]
+   Granularité : $granularity
    Répertoire projet : [cwd]
+
+   <config>
+   max_phases_per_story=$max_phases_per_story
+   max_review_cycles=$max_review_cycles
+   research_enabled=$research_enabled
+   </config>
 
    Découpe cette story en phases atomiques.
    Lire l'état actuel du projet pour s'adapter.
@@ -157,9 +184,9 @@ Mettre a jour `docs/GSR-STATUS.md` selon `.claude/gsr/status-output.md` section 
 
 ## Garde-fous
 
-| Limite | Valeur | Comportement |
-|--------|--------|-------------|
-| Phases par story | 8 max | "Story trop grosse. Découper en 2 stories ?" |
+| Limite | Valeur (depuis config) | Comportement |
+|--------|------------------------|-------------|
+| Phases par story | `$max_phases_per_story` (défaut: 8) | "Story trop grosse. Découper en 2 stories ?" |
 | Tasks par phase | 5 max | "Phase trop chargée. Découper ?" |
-| Cycles review / phase | 3 max | "On valide et ajuste en exécution." |
-| Durée | < 30 min | "On approche de 30 min. On finalise ?" |
+| Cycles review / phase | `$max_review_cycles` (défaut: 3) | "On valide et ajuste en exécution." |
+| Durée | `$timeout_minutes` min (défaut: 30) | "On approche de $timeout_minutes min. On finalise ?" |

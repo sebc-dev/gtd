@@ -10,11 +10,33 @@ human_ai_ratio: 40/60
 
 # /gsr:plan $ARGUMENTS
 
+## 0. Charger la configuration
+
+1. Déterminer le mode config : exécuter `.claude/gsr/bin/gsr-config.sh config-mode`
+   - Si `jq` → exécuter `.claude/gsr/bin/gsr-config.sh dump plan` pour obtenir toutes les valeurs en un appel
+   - Si `claude` → lire `.claude/gsr/config.json` avec Read et extraire `workflow.plan.*`, `workflow.research.*` et `workflow.granularity`
+   - Si `.claude/gsr/config.json` n'existe pas → utiliser les valeurs par défaut documentées dans les garde-fous ci-dessous
+
+2. Valeurs chargées :
+
+| Variable | Clé config | Défaut |
+|----------|------------|--------|
+| `$granularity` | `workflow.granularity` | `flexible` |
+| `$max_stories_per_epic` | `workflow.plan.max_stories_per_epic` | `6` |
+| `$max_epics` | `workflow.plan.max_epics` | `10` |
+| `$max_review_cycles` | `workflow.plan.max_review_cycles` | `3` |
+| `$timeout_minutes` | `workflow.plan.timeout_minutes` | `30` |
+| `$research_enabled` | `workflow.research.enabled` | `true` |
+| `$max_deep_research` | `workflow.research.max_deep` | `3` |
+| `$max_quick_research` | `workflow.research.max_quick` | `5` |
+
+Note : si `--granularity=` est passé en argument, il surcharge `$granularity` de la config.
+
 ## Parse arguments
 
 1. Extraire depuis `$ARGUMENTS` :
    - `spec_path` : premier argument positionnel (chemin vers SPEC.md) — si absent, chercher `SPEC.md` dans le répertoire courant
-   - `--granularity=` : `fine` | `standard` | `flexible` — défaut : `flexible`
+   - `--granularity=` : `fine` | `standard` | `flexible` — défaut : `$granularity` (depuis config)
    - `--dry-run` : si présent, afficher ce qui serait créé sans créer
 
 ## Pré-checks
@@ -45,8 +67,13 @@ human_ai_ratio: 40/60
    ```
    Analyse les documents bootstrap du projet.
    SPEC.md : [spec_path]
-   Granularité : [granularity]
+   Granularité : $granularity
    Répertoire projet : [cwd]
+
+   <config>
+   max_epics=$max_epics
+   max_stories_per_epic=$max_stories_per_epic
+   </config>
    ```
 
 2. Vérifier que `.claude/plan-session.md` a été créé avec la section `## Analyse`
@@ -62,7 +89,13 @@ human_ai_ratio: 40/60
    ```
    Mode : roadmap
    Session : .claude/plan-session.md
-   Granularité : [granularity]
+   Granularité : $granularity
+
+   <config>
+   max_epics=$max_epics
+   max_stories_per_epic=$max_stories_per_epic
+   research_enabled=$research_enabled
+   </config>
 
    Décompose le projet en Epics et Stories (SANS phases).
    Lire la section ## Analyse de la session pour les données.
@@ -189,10 +222,10 @@ Mettre a jour `docs/GSR-STATUS.md` selon `.claude/gsr/status-output.md` section 
 
 ## Garde-fous
 
-| Limite | Valeur | Comportement |
-|--------|--------|-------------|
-| Total epics | 10 max | "10 epics = projet très ambitieux pour solo dev." |
-| Stories par epic | 6 max | "Beaucoup de stories. Certaines sont-elles post-MVP ?" |
-| Cycles review / epic | 3 max | "3ème itération. On valide et ajuste en exécution." |
-| Recherches / session | 3 deep + 5 quick | "Continuons avec ce qu'on a." |
-| Durée totale | < 30 min | "On approche de 30 min. On finalise ?" |
+| Limite | Valeur (depuis config) | Comportement |
+|--------|------------------------|-------------|
+| Total epics | `$max_epics` (défaut: 10) | "$max_epics epics = projet très ambitieux pour solo dev." |
+| Stories par epic | `$max_stories_per_epic` (défaut: 6) | "Beaucoup de stories. Certaines sont-elles post-MVP ?" |
+| Cycles review / epic | `$max_review_cycles` (défaut: 3) | "[N]ème itération. On valide et ajuste en exécution." |
+| Recherches / session | `$max_deep_research` deep + `$max_quick_research` quick (défaut: 3+5) | "Continuons avec ce qu'on a." |
+| Durée totale | `$timeout_minutes` min (défaut: 30) | "On approche de $timeout_minutes min. On finalise ?" |

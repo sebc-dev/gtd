@@ -10,6 +10,23 @@ human_ai_ratio: 40/60
 
 # /gsr:plan-story $ARGUMENTS
 
+## 0. Charger la configuration
+
+1. Déterminer le mode config : exécuter `.claude/gsr/bin/gsr-config.sh config-mode`
+   - Si `jq` → exécuter `.claude/gsr/bin/gsr-config.sh dump plan` pour obtenir les valeurs
+   - Si `claude` → lire `.claude/gsr/config.json` avec Read et extraire `workflow.plan.*` et `workflow.research.*`
+   - Si `.claude/gsr/config.json` n'existe pas → utiliser les valeurs par défaut
+
+2. Valeurs chargées :
+
+| Variable | Clé config | Défaut |
+|----------|------------|--------|
+| `$max_review_cycles` | `workflow.plan.max_review_cycles` | `3` |
+| `$timeout_minutes` | `workflow.plan.timeout_minutes` | `30` |
+| `$research_enabled` | `workflow.research.enabled` | `true` |
+| `$max_deep_research` | `workflow.research.max_deep` | `3` |
+| `$max_quick_research` | `workflow.research.max_quick` | `5` |
+
 ## Parse arguments
 
 1. Extraire depuis `$ARGUMENTS` :
@@ -62,6 +79,11 @@ human_ai_ratio: 40/60
    Epic : docs/plan/epics/[epic-slug]/EPIC.md
    Story slug : [story-slug]
    Répertoire projet : [cwd]
+
+   <config>
+   max_review_cycles=$max_review_cycles
+   research_enabled=$research_enabled
+   </config>
 
    Détaille cette story : acceptance criteria, composants, risques,
    estimation, pré-requis, notes d'implémentation.

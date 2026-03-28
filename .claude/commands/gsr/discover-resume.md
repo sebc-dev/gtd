@@ -6,6 +6,15 @@ human_ai_ratio: 60/40
 
 # /gsr:discover-resume
 
+## 0. Charger la configuration
+
+1. Déterminer le mode config : exécuter `.claude/gsr/bin/gsr-config.sh config-mode`
+   - Si `jq` → exécuter `.claude/gsr/bin/gsr-config.sh dump discovery` pour obtenir toutes les valeurs en un appel
+   - Si `claude` → lire `.claude/gsr/config.json` avec Read et extraire les valeurs de `workflow.discovery.*`, `workflow.research.*` et `workflow.mode`
+   - Si `.claude/gsr/config.json` n'existe pas → utiliser les valeurs par défaut de `/gsr:discover`
+
+2. Ces valeurs s'appliquent aux garde-fous de la session reprise (mêmes limites que `/gsr:discover`).
+
 ## Pré-checks
 
 1. Vérifier si `.claude/discovery-session.md` existe :

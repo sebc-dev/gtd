@@ -6,6 +6,22 @@ human_ai_ratio: 20/80
 
 # /gsr:bootstrap $ARGUMENTS
 
+## 0. Charger la configuration
+
+1. Déterminer le mode config : exécuter `.claude/gsr/bin/gsr-config.sh config-mode`
+   - Si `jq` → exécuter `.claude/gsr/bin/gsr-config.sh dump output` et `.claude/gsr/bin/gsr-config.sh dump git` pour obtenir les valeurs
+   - Si `claude` → lire `.claude/gsr/config.json` avec Read et extraire `output.*` et `environment.git_provider`
+   - Si `.claude/gsr/config.json` n'existe pas → utiliser les valeurs par défaut
+
+2. Valeurs chargées :
+
+| Variable | Clé config | Défaut |
+|----------|------------|--------|
+| `$claude_md_max_lines` | `output.claude_md_max_lines` | `60` |
+| `$spec_format` | `output.spec_format` | `lean` |
+| `$plan_format` | `output.plan_format` | `xml` |
+| `$git_provider` | `environment.git_provider` | `github` |
+
 ## Parse des arguments
 
 - `$ARGUMENTS` contient le chemin vers discovery.md (défaut : `discovery.md` dans le répertoire courant)
@@ -32,6 +48,13 @@ Discovery : [chemin discovery.md]
 Templates : .claude/gsr/discovery-output.md
 Flags : [--dry-run] [--no-adr] [--minimal]
 Répertoire projet : [cwd]
+
+<config>
+claude_md_max_lines=$claude_md_max_lines
+spec_format=$spec_format
+plan_format=$plan_format
+git_provider=$git_provider
+</config>
 
 Génère la structure projet depuis discovery.md.
 Charger les templates depuis .claude/gsr/discovery-output.md.
